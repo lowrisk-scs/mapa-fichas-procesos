@@ -295,7 +295,7 @@ function stepCar(){
   $("#view").innerHTML=`<h1>Caracteriza cada proceso</h1><p class="lead">Elige un proceso de la lista. Lo mínimo para darlo por completo: objetivo, responsable, entradas y salidas.</p>
   <div class="carlayout"><nav class="plnav" aria-label="Procesos">${nav}</nav>
   <div class="carform"><h2>${esc(p.nombre)}</h2><p class="sub">Proceso ${t.sing}</p>${html}
-   <div class="sec">Seguridad</div><div class="checks">${[["carga","Toca la carga"],["info","Toca información de la carga"],["personal","Involucra personal crítico"]].map(([k,l])=>`<label><input type="checkbox" data-x="${k}" ${c["toca_"+k]?'checked':''}>${l}</label>`).join("")}</div>
+   <div class="sec">Criticidad del proceso</div><div class="checks">${[["carga","Toca la carga"],["info","Toca información de la carga"],["personal","Involucra personal crítico"]].map(([k,l])=>`<label><input type="checkbox" data-x="${k}" ${c["toca_"+k]?'checked':''}>${l}</label>`).join("")}</div>
    <div class="navrow"><button class="btn" type="button" id="prevP">Proceso anterior</button><button class="btn primary" type="button" id="nextP">Siguiente proceso</button></div></div></div>${tipHTML(2)}
   <div class="navrow"><button class="btn" type="button" id="prev">Atrás</button><button class="btn primary" type="button" id="next">Ver mapa y resultado</button></div>`;
   $("#view").querySelectorAll(".plnav button").forEach(b=>b.onclick=()=>{selected=b.dataset.id;save();stepCar();$(".carform").scrollIntoView({behavior:"smooth",block:"start"})});
@@ -335,7 +335,7 @@ function turtleHTML(p){
   const sal=`<div class="tb"><h3>Salidas y clientes</h3><p><b>Salidas</b></p>${list(c.salidas)}${lines(c.clientes).length?`<p style="margin-top:6px"><b>Clientes</b></p>${list(c.clientes)}`:""}</div>`;
   const toca=[["carga","Carga"],["info","Información"],["personal","Personal crítico"]].map(([k,l])=>`<span class="chip ${c["toca_"+k]?'on':''}">${c["toca_"+k]?'Toca ':'No toca '}${l.toLowerCase()}</span>`).join("");
   return `<div class="turtle">${box("Recursos",c.recursos)}${box("Actividades principales",c.actividades)}${box("Indicadores",c.indicadores)}${ent}${center}${sal}${box("Riesgos",c.riesgos)}${box("Requisitos BASC",c.requisitos)}${box("Documentos y registros",c.documentos)}</div>
-  <div class="carfoot"><div class="tb" style="min-height:0"><h3>Interacción con otros procesos</h3>${list(c.interaccion)}</div><div class="tb" style="min-height:0"><h3>Seguridad</h3><div class="chips">${toca}</div></div></div>`;
+  <div class="carfoot"><div class="tb" style="min-height:0"><h3>Interacción con otros procesos</h3>${list(c.interaccion)}</div><div class="tb" style="min-height:0"><h3>Criticidad del proceso</h3><div class="chips">${toca}</div></div></div>`;
 }
 function turtleView(id){
   const p=S.procesos.find(x=>x.id===id);if(!p){viewProc=null;return stepMapa()}
@@ -398,9 +398,9 @@ function buildPDF(){
     cell(2,1,"Salidas y clientes",["Salidas:",...bl(c.salidas),...(lines(c.clientes).length?["Clientes:",...bl(c.clientes)]:[])]);
     cell(0,2,"Riesgos",bl(c.riesgos));cell(1,2,"Requisitos BASC",bl(c.requisitos));cell(2,2,"Documentos y registros",bl(c.documentos));
     const y2=gy+3*(ch+10);doc.setFont("helvetica","bold");doc.setFontSize(8.5);doc.setTextColor(43,58,82);
-    doc.text("Interacción: ",M,y2+4);doc.setFont("helvetica","normal");doc.setTextColor(24,33,46);doc.text(doc.splitTextToSize(lines(c.interaccion).join(", ")||"Sin capturar",W-2*M-260).slice(0,2),M+56,y2+4);
+    doc.text("Interacción: ",M,y2+4);doc.setFont("helvetica","normal");doc.setTextColor(24,33,46);doc.text(doc.splitTextToSize(lines(c.interaccion).join(", ")||"Sin capturar",W-2*M-300).slice(0,2),M+56,y2+4);
     const toca=[c.toca_carga?"carga":"",c.toca_info?"información":"",c.toca_personal?"personal crítico":""].filter(Boolean);
-    doc.setFont("helvetica","bold");doc.setTextColor(toca.length?158:86,toca.length?43:97,toca.length?36:115);doc.text(toca.length?("Toca: "+toca.join(", ")):"No toca carga, información ni personal crítico",W-M,y2+4,{align:"right"});
+    doc.setFont("helvetica","bold");doc.setTextColor(toca.length?158:86,toca.length?43:97,toca.length?36:115);doc.text(toca.length?("Criticidad: toca "+toca.join(", ")):"Criticidad: no toca carga, información ni personal crítico",W-M,y2+4,{align:"right"});
     footer(page)});
   return doc;
 }
