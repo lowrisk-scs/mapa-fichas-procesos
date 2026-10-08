@@ -200,7 +200,7 @@ const TIPS = [
  "Tu mapa y tus caracterizaciones deben coincidir con el alcance de tu SGCS. Si una sede o actividad está en el alcance, sus procesos también deben aparecer aquí.",
  "Incluye los procesos que subcontratas y tocan la carga, como el transporte. Aunque los haga un tercero, siguen siendo tu responsabilidad (Norma 1.3).",
  "Un buen objetivo dice para qué existe el proceso, no lo que hace. Y cada proceso que toca la carga debería tener al menos un riesgo de seguridad identificado.",
- "Revisa que cada riesgo del mapa tenga un indicador o un control que lo vigile. Esa conexión es lo que hace que el sistema funcione, no solo que exista."];
+ "Un proceso puede ser operativo y de apoyo a la vez. En una empresa de seguridad privada, Recursos Humanos da servicio a la empresa y también provee al personal operativo que cumple las consignas del cliente. Identifica qué actividades realiza y clasifícalo con base en eso."];
 
 let S = load() || blank();
 S.procesos = (S.procesos||[]).filter(p=>TYPES.some(t=>t.id===p.tipo));
